@@ -25,7 +25,7 @@ rarrow=$(tmux_get '@tmux_power_right_arrow_icon' '')
 larrow=$(tmux_get '@tmux_power_left_arrow_icon' '')
 upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
 download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
-session_icon="$(tmux_get '@tmux_power_session_icon' ' ')"
+session_icon="$(tmux_get '@tmux_power_session_icon' ' 󠀠󠀠󠀠')"
 user_icon="$(tmux_get '@tmux_power_user_icon' '  󠀠󠀠󠀠')"
 network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠 󠀠󠀠')"
 prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
@@ -105,8 +105,18 @@ tmux_set status-left-fg "$G12"
 tmux_set status-left-length 150
 user=$(whoami)
 user="${user%%.*}"
-LS="#[fg=$G04,bg=$TC,bold] $user_icon $user@#h #[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $session_icon #S "
-LS="$LS#[fg=$G06,bg=$BG]$rarrow"
+
+# machine
+LS="#[fg=$G04,bg=$TC,bold] $user_icon $user@#h "
+LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow"
+
+# user
+LS="$LS#[fg=$TC,bg=$G06] #{battery_icon} #{battery_remain} "
+LS="$LS#[fg=$G06,bg=$G05]$rarrow"
+
+# session
+LS="$LS#[fg=$TC,bg=$G05]$session_icon #S "
+LS="$LS#[fg=$G05,bg=$BG]$rarrow"
 
 if [[ $prefix_highlight_pos == 'L' || $prefix_highlight_pos == 'LR' ]]; then
   LS="$LS#{prefix_highlight}"
