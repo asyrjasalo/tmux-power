@@ -122,8 +122,8 @@ tmux_set status-right-length 150
 RS="#[fg=$G04,bg=$TC,bold] $(curl --silent --ipv4 https://ifconfig.co/json | jq -r .ip) $network_icon"
 
 # Network speed
-RS="#[fg=$TC,bg=$G06] $download_speed_icon#{download_speed} #[fg=$TC,bg=$G06]$larrow$RS"
-RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] $upload_speed_icon#{upload_speed} #[fg=$G06,bg=$G05]$larrow$RS"
+RS="#[fg=$TC,bg=$G06] $download_speed_icon #{download_speed} #[fg=$TC,bg=$G06]$larrow$RS"
+RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] $upload_speed_icon #{upload_speed} #[fg=$G06,bg=$G05]$larrow$RS"
 
 if [[ $prefix_highlight_pos == 'R' || $prefix_highlight_pos == 'LR' ]]; then
   RS="#{prefix_highlight}$RS"
