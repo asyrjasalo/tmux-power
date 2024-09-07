@@ -27,8 +27,7 @@ upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
 download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
 session_icon="$(tmux_get '@tmux_power_session_icon' ' ')"
 user_icon="$(tmux_get '@tmux_power_user_icon' '  󠀠󠀠󠀠')"
-command="$(tmux_get '@tmux_power_command')"
-command_icon="$(tmux_get '@tmux_power_command_icon' ' 󠀠 󠀠󠀠')"
+network_icon="$(tmux_get '@tmux_power_command_icon' ' 󠀠 󠀠󠀠')"
 prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
 
 # short for Theme-Colour
@@ -119,8 +118,8 @@ tmux_set status-right-bg "$BG"
 tmux_set status-right-fg "$G12"
 tmux_set status-right-length 150
 
-# Command
-RS="#[fg=$G04,bg=$TC,bold] $($command) $command_icon"
+# Public IP
+RS="#[fg=$G04,bg=$TC,bold] #{public_ip} $network_icon"
 
 # Network speed
 RS="#[fg=$TC,bg=$G06] $download_speed_icon #{download_speed} #[fg=$TC,bg=$G06]$larrow$RS"
