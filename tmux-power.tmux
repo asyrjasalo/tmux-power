@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #===============================================================================
 # Forked from: https://github.com/wfxr/tmux-power
 # Author: Wenxuan
@@ -22,14 +23,13 @@ tmux_set() {
 # Options
 rarrow=$(tmux_get '@tmux_power_right_arrow_icon' '')
 larrow=$(tmux_get '@tmux_power_left_arrow_icon' '')
-upload_speed_icon=$(tmux_get '@tmux_power_upload_speed_icon' '↑')
-download_speed_icon=$(tmux_get '@tmux_power_download_speed_icon' '↓')
+upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
+download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
 session_icon="$(tmux_get '@tmux_power_session_icon' ' ')"
 user_icon="$(tmux_get '@tmux_power_user_icon' '  󠀠󠀠󠀠')"
-time_icon="$(tmux_get '@tmux_power_time_icon' '  󠀠󠀠󠀠')"
-show_net_speed="$(tmux_get @tmux_power_show_net_speed true)"
-prefix_highlight_pos=$(tmux_get @tmux_power_prefix_highlight_pos)
-time_format=$(tmux_get @tmux_power_time_format '%T')
+network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠 󠀠󠀠')"
+prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
+
 # short for Theme-Colour
 TC=$(tmux_get '@tmux_power_theme' 'gold')
 case $TC in
@@ -118,14 +118,12 @@ tmux_set status-right-bg "$BG"
 tmux_set status-right-fg "$G12"
 tmux_set status-right-length 150
 
-RS="#[fg=$G04,bg=$TC,bold] $time_format $time_icon 󠀠󠀠󠀠"
+# Public IP
+RS="#[fg=$G04,bg=$TC,bold] $(curl --silent --ipv4 https://ifconfig.co/json | jq -r .ip) $network_icon"
 
-if "$show_net_speed"; then
-  RS="#[fg=$TC,bg=$G06] $download_speed_icon #{download_speed} #[fg=$TC,bg=$G06]$larrow$RS"
-  RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] $upload_speed_icon #{upload_speed} #[fg=$G06,bg=$G05]$larrow$RS"
-else
-  RS="#[fg=$G06,bg=$G04]$larrow#[fg=$TC,bg=$G06] #(curl --silent --ipv4 https://ifconfig.co/json | jq -r .ip) #[fg=$TC,bg=$G06]$larrow$RS"
-fi
+# Network speed
+RS="#[fg=$TC,bg=$G06] $download_speed_icon#{download_speed} #[fg=$TC,bg=$G06]$larrow$RS"
+RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] $upload_speed_icon#{upload_speed} #[fg=$G06,bg=$G05]$larrow$RS"
 
 if [[ $prefix_highlight_pos == 'R' || $prefix_highlight_pos == 'LR' ]]; then
   RS="#{prefix_highlight}$RS"
