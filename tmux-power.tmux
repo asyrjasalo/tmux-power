@@ -28,6 +28,7 @@ download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
 session_icon="$(tmux_get '@tmux_power_session_icon' ' 󠀠󠀠󠀠')"
 user_icon="$(tmux_get '@tmux_power_user_icon' '  󠀠󠀠󠀠')"
 network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠 󠀠󠀠')"
+show_battery="$(tmux_get '@tmux_power_show_battery' false)"
 prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
 
 # short for Theme-Colour
@@ -106,17 +107,19 @@ tmux_set status-left-length 150
 user=$(whoami)
 user="${user%%.*}"
 
-# machine
-LS="#[fg=$G04,bg=$TC,bold] $user_icon $user@#h "
-LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow"
-
 # user
-LS="$LS#[fg=$TC,bg=$G06] #{battery_icon} #{battery_remain} "
-LS="$LS#[fg=$G06,bg=$G05]$rarrow"
+LS="#[fg=$G04,bg=$TC,bold] $user_icon $user@#h "
 
 # session
-LS="$LS#[fg=$TC,bg=$G05]$session_icon #S "
-LS="$LS#[fg=$G05,bg=$BG]$rarrow"
+LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $session_icon #S "
+
+# battery
+if "$show_battery" ; then
+  LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] #{battery_remain} "
+  LS="$LS#[fg=$G05,bg=$BG]$rarrow"
+else
+  LS="$LS#[fg=$G06,bg=$BG]$rarrow"
+fi
 
 if [[ $prefix_highlight_pos == 'L' || $prefix_highlight_pos == 'LR' ]]; then
   LS="$LS#{prefix_highlight}"
