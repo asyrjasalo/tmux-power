@@ -105,7 +105,7 @@ tmux_set status-left-bg "$G04"
 tmux_set status-left-fg "$G12"
 tmux_set status-left-length 150
 user="$(whoami)"
-user="${user%%.*}"
+user="${user%%@*}"
 
 # user
 LS="#[fg=$G04,bg=$TC,bold] $user_icon $user "
