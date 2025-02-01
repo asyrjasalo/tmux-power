@@ -26,8 +26,8 @@ larrow=$(tmux_get '@tmux_power_left_arrow_icon' '')
 upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
 download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
 session_icon="$(tmux_get '@tmux_power_session_icon' '⊞')"
-user_icon="$(tmux_get '@tmux_power_user_icon' '  󠀠󠀠󠀠')"
-network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠 󠀠󠀠')"
+user_icon="$(tmux_get '@tmux_power_user_icon' ' ')"
+network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠')"
 show_battery="$(tmux_get '@tmux_power_show_battery' false)"
 prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
 
