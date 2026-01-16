@@ -21,17 +21,25 @@ tmux_set() {
 }
 
 # Options
+# left
 rarrow=$(tmux_get '@tmux_power_right_arrow_icon' '')
-larrow=$(tmux_get '@tmux_power_left_arrow_icon' '')
-upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
-download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
 session_icon="$(tmux_get '@tmux_power_session_icon' '⊞')"
-user_icon="$(tmux_get '@tmux_power_user_icon' ' ')"
-network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠')"
-show_battery="$(tmux_get '@tmux_power_show_battery' false)"
+show_usage="$(tmux_get '@tmux_power_show_usage' true)"
+cpu_icon="$(tmux_get '@tmux_power_cpu_icon' ' 󠀠')"
+mem_icon="$(tmux_get '@tmux_power_mem_icon' ' 󠀠')"
+show_battery="$(tmux_get '@tmux_power_show_battery' true)"
+battery_icon="$(tmux_get '@tmux_power_battery_icon' '󰁿')"
+prefix_highlight_pos="$(tmux_get '@tmux_power_prefix_highlight_pos' 'L')"
+# center
 show_zoomed="$(tmux_get '@tmux_power_show_zoomed' true)"
 zoomed_icon="$(tmux_get '@tmux_power_zoomed_icon' '⤢')"
-prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
+# right
+larrow=$(tmux_get '@tmux_power_left_arrow_icon' '')
+show_upload_speed="$(tmux_get '@tmux_power_show_upload_speed' true)"
+upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
+show_download_speed="$(tmux_get '@tmux_power_show_download_speed' true)"
+download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
+network_icon="$(tmux_get '@tmux_power_network_icon' '󰖩 󠀠')"
 
 # short for Theme-Colour
 TC=$(tmux_get '@tmux_power_theme' 'gold')
@@ -106,21 +114,28 @@ tmux_set @prefix_highlight_output_suffix "#[fg=$TC]#[bg=$BG]$rarrow"
 tmux_set status-left-bg "$G04"
 tmux_set status-left-fg "$G12"
 tmux_set status-left-length 150
-user="$(whoami)"
-user="${user%%@*}"
-
-# user
-LS="#[fg=$G04,bg=$TC,bold] $user_icon $user "
 
 # session
-LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $session_icon #S "
+LS="#[fg=$G04,bg=$TC,bold] $session_icon #S "
 
-# battery
+# cpu, mem, disk
+if "$show_usage" ; then
+  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu}  󠀠 󠀠$mem_icon #{mem} "
+fi
+
+# battery (third segment)
 if "$show_battery" ; then
-  LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] #{battery_percentage} "
-  LS="$LS#[fg=$G05,bg=$BG]$rarrow"
-else
+  if "$show_usage" ; then
+    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $battery_icon #{battery_percentage}% "
+    LS="$LS#[fg=$G05,bg=$BG]$rarrow"
+  else
+    LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $battery_icon #{battery_percentage}% "
+    LS="$LS#[fg=$G06,bg=$BG]$rarrow"
+  fi
+elif "$show_usage" ; then
   LS="$LS#[fg=$G06,bg=$BG]$rarrow"
+else
+  LS="$LS#[fg=$TC,bg=$BG,nobold]$rarrow"
 fi
 
 if [[ $prefix_highlight_pos == 'L' || $prefix_highlight_pos == 'LR' ]]; then
@@ -133,12 +148,31 @@ tmux_set status-right-bg "$BG"
 tmux_set status-right-fg "$G12"
 tmux_set status-right-length 150
 
-# Public IP
-RS="#[fg=$G04,bg=$TC,bold] #{public_ip} $network_icon"
+# Public IP (always displayed, rightmost segment)
+RS="#[fg=$G04,bg=$TC,bold] #{public_ip} $network_icon 󠀠"
 
-# Network speed
-RS="#[fg=$TC,bg=$G06]#{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
-RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05]#{upload_speed} $upload_speed_icon #[fg=$G06,bg=$G05]$larrow$RS"
+# Network speed (left of IP)
+# The order from left to right is: upload -> download -> ip
+if "$show_download_speed" ; then
+  if "$show_upload_speed" ; then
+    RS="#[fg=$TC,bg=$G06] 󠀠#{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
+  else
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] 󠀠#{download_speed} $download_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
+  fi
+fi
+
+if "$show_upload_speed" ; then
+  if "$show_download_speed" ; then
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] 󠀠#{upload_speed} $upload_speed_icon #[fg=$G06,bg=$G05]$larrow$RS"
+  else
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] 󠀠#{upload_speed} $upload_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
+  fi
+fi
+
+# If neither upload nor download is enabled, add arrow from background to IP
+if ! "$show_upload_speed" && ! "$show_download_speed" ; then
+  RS="#[fg=$TC,bg=$BG]$larrow$RS"
+fi
 
 if [[ $prefix_highlight_pos == 'R' || $prefix_highlight_pos == 'LR' ]]; then
   RS="#{prefix_highlight}$RS"
