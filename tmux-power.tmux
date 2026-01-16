@@ -29,6 +29,8 @@ session_icon="$(tmux_get '@tmux_power_session_icon' '⊞')"
 user_icon="$(tmux_get '@tmux_power_user_icon' ' ')"
 network_icon="$(tmux_get '@tmux_power_network_icon' ' 󠀠')"
 show_battery="$(tmux_get '@tmux_power_show_battery' false)"
+show_zoomed="$(tmux_get '@tmux_power_show_zoomed' true)"
+zoomed_icon="$(tmux_get '@tmux_power_zoomed_icon' '⤢')"
 prefix_highlight_pos="$(tmux_get @tmux_power_prefix_highlight_pos)"
 
 # short for Theme-Colour
@@ -144,8 +146,13 @@ fi
 tmux_set status-right "$RS"
 
 # Window status format
-tmux_set window-status-format " #I:#W "
-tmux_set window-status-current-format "#[fg=$BG,bg=$TC]$rarrow#[fg=$BG,bg=$TC,bold] #I:#W #[fg=$TC,bg=$BG,nobold]$rarrow"
+if "$show_zoomed" ; then
+  tmux_set window-status-format " #I:#W #{?window_zoomed_flag,$zoomed_icon ,}"
+  tmux_set window-status-current-format "#[fg=$BG,bg=$TC]$rarrow#[fg=$BG,bg=$TC,bold] #I:#W #{?window_zoomed_flag,$zoomed_icon ,}#[fg=$TC,bg=$BG,nobold]$rarrow"
+else
+  tmux_set window-status-format " #I:#W "
+  tmux_set window-status-current-format "#[fg=$BG,bg=$TC]$rarrow#[fg=$BG,bg=$TC,bold] #I:#W #[fg=$TC,bg=$BG,nobold]$rarrow"
+fi
 
 # Window status style
 tmux_set window-status-style "fg=$G12,bg=$BG,none"
