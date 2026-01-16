@@ -28,9 +28,8 @@ show_usage="$(tmux_get '@tmux_power_show_usage' true)"
 cpu_icon="$(tmux_get '@tmux_power_cpu_icon' ' 󠀠')"
 mem_icon="$(tmux_get '@tmux_power_mem_icon' ' 󠀠')"
 show_battery="$(tmux_get '@tmux_power_show_battery' true)"
-battery_icon="$(tmux_get '@tmux_power_battery_icon' '󰁿')"
-prefix_highlight_pos="$(tmux_get '@tmux_power_prefix_highlight_pos' 'L')"
 # center
+prefix_highlight_pos="$(tmux_get '@tmux_power_prefix_highlight_pos' 'L')"
 show_zoomed="$(tmux_get '@tmux_power_show_zoomed' true)"
 zoomed_icon="$(tmux_get '@tmux_power_zoomed_icon' '⤢')"
 # right
@@ -126,10 +125,10 @@ fi
 # battery (third segment)
 if "$show_battery" ; then
   if "$show_usage" ; then
-    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $battery_icon #{battery_percentage}% "
+    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] #{battery_icon_charge}󠀠 󠀠 󠀠#{battery_percentage}% "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   else
-    LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $battery_icon #{battery_percentage}% "
+    LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] #{battery_icon_charge} 󠀠 󠀠#{battery_percentage}% "
     LS="$LS#[fg=$G06,bg=$BG]$rarrow"
   fi
 elif "$show_usage" ; then
