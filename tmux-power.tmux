@@ -38,7 +38,18 @@ show_upload_speed="$(tmux_get '@tmux_power_show_upload_speed' true)"
 upload_speed_icon="$(tmux_get '@tmux_power_upload_speed_icon' '↑')"
 show_download_speed="$(tmux_get '@tmux_power_show_download_speed' true)"
 download_speed_icon="$(tmux_get '@tmux_power_download_speed_icon' '↓')"
-network_icon="$(tmux_get '@tmux_power_network_icon' '󰖩 󠀠')"
+# Only honor @tmux_power_network_icon when set to non-whitespace. Otherwise keep
+# default (fixes stale single-space/empty from old configs; tmux_get alone cannot).
+# Use the literal value "none" to hide the icon without extra padding.
+network_icon='󰖩 '
+if tmux show -g 2>/dev/null | grep -q '^@tmux_power_network_icon'; then
+  _network_icon="$(tmux show -gqv '@tmux_power_network_icon')"
+  if [[ "$_network_icon" == "off" ]]; then
+    network_icon=""
+  elif [[ -n "${_network_icon//[[:space:]]/}" ]]; then
+    network_icon="$_network_icon"
+  fi
+fi
 
 # short for Theme-Colour
 TC=$(tmux_get '@tmux_power_theme' 'gold')
@@ -148,7 +159,13 @@ tmux_set status-right-fg "$G12"
 tmux_set status-right-length 150
 
 # Public IP (always displayed, rightmost segment)
-RS="#[fg=$G04,bg=$TC,bold] #{public_ip} $network_icon 󠀠"
+RS="#[fg=$G04,bg=$TC,bold] #{public_ip}"
+# Extra gaps only when the icon has visible content (whitespace-only counts as empty)
+if [[ -n "${network_icon//[[:space:]]/}" ]]; then
+  RS="$RS $network_icon "
+else
+  RS="$RS "
+fi
 
 # Network speed (left of IP)
 # The order from left to right is: upload -> download -> ip
