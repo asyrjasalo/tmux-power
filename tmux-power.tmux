@@ -110,6 +110,7 @@ tmux_set status on
 tmux_set status-fg "$FG"
 tmux_set status-bg "$BG"
 tmux_set status-attr none
+tmux_set status-style "fg=$FG,bg=$BG,none"
 tmux_set status-justify centre
 
 # tmux-prefix-highlight
