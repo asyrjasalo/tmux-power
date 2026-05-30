@@ -134,7 +134,7 @@ LS="#[fg=$G04,bg=$TC,bold] $session_icon #S "
 
 # cpu, mem, disk
 if "$show_usage" ; then
-  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu}  $mem_icon #{mem}  $disk_icon #{disk} "
+  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu} $mem_icon #{mem} $disk_icon #{disk} "
 fi
 
 # battery (third segment)
