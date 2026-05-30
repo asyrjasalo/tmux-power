@@ -175,17 +175,17 @@ fi
 # The order from left to right is: upload -> download -> ip
 if "$show_download_speed" ; then
   if "$show_upload_speed" ; then
-    RS="#[fg=$TC,bg=$G06] 󠀠#{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
+    RS="#[fg=$TC,bg=$G06] #{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
   else
-    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] 󠀠#{download_speed} $download_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{download_speed} $download_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
   fi
 fi
 
 if "$show_upload_speed" ; then
   if "$show_download_speed" ; then
-    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] 󠀠#{upload_speed} $upload_speed_icon #[fg=$G06,bg=$G05]$larrow$RS"
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{upload_speed} $upload_speed_icon #[fg=$G06,bg=$G05]$larrow$RS"
   else
-    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] 󠀠#{upload_speed} $upload_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{upload_speed} $upload_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
   fi
 fi
 
