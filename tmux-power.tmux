@@ -28,6 +28,8 @@ show_usage="$(tmux_get '@tmux_power_show_usage' true)"
 cpu_icon="$(tmux_get '@tmux_power_cpu_icon' ' 󠀠')"
 mem_icon="$(tmux_get '@tmux_power_mem_icon' ' 󠀠')"
 show_battery="$(tmux_get '@tmux_power_show_battery' true)"
+# Lima VMs have no battery hardware - tmux-battery scripts exit with errors
+if hostname | grep -q "^lima"; then show_battery=false; fi
 # center
 prefix_highlight_pos="$(tmux_get '@tmux_power_prefix_highlight_pos' 'L')"
 show_zoomed="$(tmux_get '@tmux_power_show_zoomed' true)"
