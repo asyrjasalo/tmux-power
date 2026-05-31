@@ -28,12 +28,12 @@ show_usage="$(tmux_get '@tmux_power_show_usage' true)"
 cpu_icon="$(tmux_get '@tmux_power_cpu_icon' ' 󠀠')"
 mem_icon="$(tmux_get '@tmux_power_mem_icon' ' 󠀠')"
 disk_icon="$(tmux_get '@tmux_power_disk_icon' '󰋊')"
-gpu_icon="$(tmux_get '@tmux_power_gpu_icon' '󰡂')"
+gpu_icon="$(tmux_get '@tmux_power_gpu_icon' '󰢮')"
 show_gpu="$(tmux_get '@tmux_power_show_gpu' true)"
 show_cpu_temp="$(tmux_get '@tmux_power_show_cpu_temp' false)"
 show_gpu_temp="$(tmux_get '@tmux_power_show_gpu_temp' false)"
 cpu_temp_icon="$(tmux_get '@tmux_power_cpu_temp_icon' '󰔏')"
-gpu_temp_icon="$(tmux_get '@tmux_power_gpu_temp_icon' '󰢮')"
+gpu_temp_icon="$(tmux_get '@tmux_power_gpu_temp_icon' '󰔏')"
 if [[ "$gpu_temp_icon" == "off" ]]; then gpu_temp_icon=""; fi
 # Auto-detect: hide GPU when no GPU monitoring tool is available
 if [ "$(uname)" = "Darwin" ] && ! command -v macmon >/dev/null 2>&1; then show_gpu=false; fi
@@ -151,13 +151,13 @@ fi
 if "$show_gpu" ; then
   if "$show_usage" ; then
     LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu}"
-    "$show_gpu_temp" && if [ -n "$gpu_temp_icon" ]; then LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"; else LS="$LS  #{@gpu_gpu_temp}"; fi
+    "$show_gpu_temp" && if [ -n "$gpu_temp_icon" ]; then LS="$LS $gpu_temp_icon #{@gpu_gpu_temp}"; else LS="$LS #{@gpu_gpu_temp}"; fi
     "$show_cpu_temp" && LS="$LS $cpu_temp_icon #{@gpu_cpu_temp}"
     LS="$LS "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   else
     LS="$LS#[fg=$TC,bg=$G05,nobold]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu}"
-    "$show_gpu_temp" && if [ -n "$gpu_temp_icon" ]; then LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"; else LS="$LS  #{@gpu_gpu_temp}"; fi
+    "$show_gpu_temp" && if [ -n "$gpu_temp_icon" ]; then LS="$LS $gpu_temp_icon #{@gpu_gpu_temp}"; else LS="$LS #{@gpu_gpu_temp}"; fi
     "$show_cpu_temp" && LS="$LS $cpu_temp_icon #{@gpu_cpu_temp}"
     LS="$LS "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
