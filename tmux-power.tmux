@@ -28,6 +28,11 @@ show_usage="$(tmux_get '@tmux_power_show_usage' true)"
 cpu_icon="$(tmux_get '@tmux_power_cpu_icon' ' 󠀠')"
 mem_icon="$(tmux_get '@tmux_power_mem_icon' ' 󠀠')"
 disk_icon="$(tmux_get '@tmux_power_disk_icon' '󰋊')"
+gpu_icon="$(tmux_get '@tmux_power_gpu_icon' '󰢮')"
+show_gpu="$(tmux_get '@tmux_power_show_gpu' true)"
+# Auto-detect: hide GPU when no GPU monitoring tool is available
+if [ "$(uname)" = "Darwin" ] && ! command -v macmon >/dev/null 2>&1; then show_gpu=false; fi
+if [ "$(uname)" = "Linux" ] && ! command -v nvidia-smi >/dev/null 2>&1 && ! ls /sys/class/drm/card*/device/gpu_busy_percent 2>/dev/null | grep -q .; then show_gpu=false; fi
 show_battery="$(tmux_get '@tmux_power_show_battery' true)"
 # Auto-detect: hide battery when no battery hardware is present
 if [ "$(uname)" = "Linux" ] && ! ls /sys/class/power_supply/*/capacity 2>/dev/null | grep -q .; then show_battery=false; fi
@@ -134,7 +139,11 @@ LS="#[fg=$G04,bg=$TC,bold] $session_icon #S "
 
 # cpu, mem, disk
 if "$show_usage" ; then
-  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu} $mem_icon #{mem} $disk_icon #{disk} "
+  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu} $mem_icon #{mem} $disk_icon #{disk}"
+  if "$show_gpu" ; then
+    LS="$LS $gpu_icon #{gpu}"
+  fi
+  LS="$LS "
 fi
 
 # battery (third segment)
