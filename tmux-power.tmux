@@ -151,13 +151,13 @@ fi
 if "$show_gpu" ; then
   if "$show_usage" ; then
     LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu}"
-    "$show_gpu_temp" && LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"
+    "$show_gpu_temp" && if [ -n "$gpu_temp_icon" ]; then LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"; else LS="$LS  #{@gpu_gpu_temp}"; fi
     "$show_cpu_temp" && LS="$LS $cpu_temp_icon #{@gpu_cpu_temp}"
     LS="$LS "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   else
     LS="$LS#[fg=$TC,bg=$G05,nobold]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu}"
-    "$show_gpu_temp" && LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"
+    "$show_gpu_temp" && if [ -n "$gpu_temp_icon" ]; then LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"; else LS="$LS  #{@gpu_gpu_temp}"; fi
     "$show_cpu_temp" && LS="$LS $cpu_temp_icon #{@gpu_cpu_temp}"
     LS="$LS "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
