@@ -139,21 +139,17 @@ LS="#[fg=$G04,bg=$TC,bold] $session_icon #S "
 
 # cpu, mem, disk
 if "$show_usage" ; then
-  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu} $mem_icon #{mem} $disk_icon #{disk}"
-  if "$show_gpu" ; then
-    LS="$LS $gpu_icon #{gpu}"
-  fi
-  LS="$LS "
+  LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] $cpu_icon #{cpu} $mem_icon #{mem} $disk_icon #{disk} "
 fi
 
-# battery (third segment)
-if "$show_battery" ; then
+# gpu (own segment)
+if "$show_gpu" ; then
   if "$show_usage" ; then
-    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] #{battery_icon_charge}󠀠 󠀠 󠀠#{battery_percentage}% "
+    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu} "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   else
-    LS="$LS#[fg=$TC,bg=$G06,nobold]$rarrow#[fg=$TC,bg=$G06] #{battery_icon_charge} 󠀠 󠀠#{battery_percentage}% "
-    LS="$LS#[fg=$G06,bg=$BG]$rarrow"
+    LS="$LS#[fg=$TC,bg=$G05,nobold]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu} "
+    LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   fi
 elif "$show_usage" ; then
   LS="$LS#[fg=$G06,bg=$BG]$rarrow"
@@ -181,26 +177,27 @@ else
 fi
 
 # Network speed (left of IP)
-# The order from left to right is: upload -> download -> ip
-if "$show_download_speed" ; then
-  if "$show_upload_speed" ; then
-    RS="#[fg=$TC,bg=$G06] #{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
-  else
-    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{download_speed} $download_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
-  fi
-fi
-
-if "$show_upload_speed" ; then
-  if "$show_download_speed" ; then
-    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{upload_speed} $upload_speed_icon #[fg=$G06,bg=$G05]$larrow$RS"
-  else
-    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{upload_speed} $upload_speed_icon #[fg=$TC,bg=$G05]$larrow$RS"
-  fi
-fi
-
-# If neither upload nor download is enabled, add arrow from background to IP
-if ! "$show_upload_speed" && ! "$show_download_speed" ; then
+# Display order left->right: battery($G05) -> net-speed($G06) -> IP($TC)
+if "$show_upload_speed" && "$show_download_speed" ; then
+  RS="#[fg=$TC,bg=$G06] #{upload_speed} $upload_speed_icon #{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
+elif "$show_upload_speed" ; then
+  RS="#[fg=$TC,bg=$G06] #{upload_speed} $upload_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
+elif "$show_download_speed" ; then
+  RS="#[fg=$TC,bg=$G06] #{download_speed} $download_speed_icon #[fg=$TC,bg=$G06]$larrow$RS"
+else
   RS="#[fg=$TC,bg=$BG]$larrow$RS"
+fi
+
+# Battery (left of network speed) — provides the BG->segment arrow
+if "$show_battery" ; then
+  if "$show_upload_speed" || "$show_download_speed" ; then
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{battery_percentage}% #{battery_icon_charge}  #[fg=$G06,bg=$G05]$larrow$RS"
+  else
+    RS="#[fg=$G05,bg=$BG]$larrow#[fg=$TC,bg=$G05] #{battery_percentage}% #{battery_icon_charge} #[fg=$G05,bg=$TC]$larrow$RS"
+  fi
+elif "$show_upload_speed" || "$show_download_speed" ; then
+  # No battery, net-speed needs its own BG arrow
+  RS="#[fg=$G06,bg=$BG]$larrow$RS"
 fi
 
 if [[ $prefix_highlight_pos == 'R' || $prefix_highlight_pos == 'LR' ]]; then
