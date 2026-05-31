@@ -32,8 +32,8 @@ gpu_icon="$(tmux_get '@tmux_power_gpu_icon' '󰢮')"
 show_gpu="$(tmux_get '@tmux_power_show_gpu' true)"
 show_cpu_temp="$(tmux_get '@tmux_power_show_cpu_temp' false)"
 show_gpu_temp="$(tmux_get '@tmux_power_show_gpu_temp' false)"
-cpu_temp_icon="$(tmux_get '@tmux_power_cpu_temp_icon' '󰔏')"
-gpu_temp_icon="$(tmux_get '@tmux_power_gpu_temp_icon' '󰔏')"
+cpu_temp_icon="$(tmux_get '@tmux_power_cpu_temp_icon' '')"
+gpu_temp_icon="$(tmux_get '@tmux_power_gpu_temp_icon' '')"
 if [[ "$gpu_temp_icon" == "off" ]]; then gpu_temp_icon=""; fi
 # Auto-detect: hide GPU when no GPU monitoring tool is available
 if [ "$(uname)" = "Darwin" ] && ! command -v macmon >/dev/null 2>&1; then show_gpu=false; fi
