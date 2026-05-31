@@ -30,6 +30,11 @@ mem_icon="$(tmux_get '@tmux_power_mem_icon' ' 󠀠')"
 disk_icon="$(tmux_get '@tmux_power_disk_icon' '󰋊')"
 gpu_icon="$(tmux_get '@tmux_power_gpu_icon' '󰡂')"
 show_gpu="$(tmux_get '@tmux_power_show_gpu' true)"
+show_cpu_temp="$(tmux_get '@tmux_power_show_cpu_temp' false)"
+show_gpu_temp="$(tmux_get '@tmux_power_show_gpu_temp' false)"
+cpu_temp_icon="$(tmux_get '@tmux_power_cpu_temp_icon' '󰔏')"
+gpu_temp_icon="$(tmux_get '@tmux_power_gpu_temp_icon' '󰢮')"
+if [[ "$gpu_temp_icon" == "off" ]]; then gpu_temp_icon=""; fi
 # Auto-detect: hide GPU when no GPU monitoring tool is available
 if [ "$(uname)" = "Darwin" ] && ! command -v macmon >/dev/null 2>&1; then show_gpu=false; fi
 if [ "$(uname)" = "Linux" ] && ! command -v nvidia-smi >/dev/null 2>&1 && ! ls /sys/class/drm/card*/device/gpu_busy_percent 2>/dev/null | grep -q .; then show_gpu=false; fi
@@ -145,10 +150,16 @@ fi
 # gpu (own segment)
 if "$show_gpu" ; then
   if "$show_usage" ; then
-    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu} "
+    LS="$LS#[fg=$G06,bg=$G05]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu}"
+    "$show_gpu_temp" && LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"
+    "$show_cpu_temp" && LS="$LS $cpu_temp_icon #{@gpu_cpu_temp}"
+    LS="$LS "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   else
-    LS="$LS#[fg=$TC,bg=$G05,nobold]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu} "
+    LS="$LS#[fg=$TC,bg=$G05,nobold]$rarrow#[fg=$TC,bg=$G05] $gpu_icon #{gpu}"
+    "$show_gpu_temp" && LS="$LS $gpu_temp_icon  #{@gpu_gpu_temp}"
+    "$show_cpu_temp" && LS="$LS $cpu_temp_icon #{@gpu_cpu_temp}"
+    LS="$LS "
     LS="$LS#[fg=$G05,bg=$BG]$rarrow"
   fi
 elif "$show_usage" ; then
